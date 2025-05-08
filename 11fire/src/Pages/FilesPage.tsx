@@ -36,6 +36,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { uploadFileToIPFS } from '../api/upload';
+
 
 interface FileEntry {
   name: string;
@@ -122,7 +124,7 @@ const FilesPage = () => {
     input.click();
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (isRenameMode && activeFileIndex !== null) {
       const updatedFiles = [...files];
       updatedFiles[activeFileIndex] = {
@@ -130,21 +132,28 @@ const FilesPage = () => {
         name: fileName
       };
       setFiles(updatedFiles);
-    } else {
-      const newFile: FileEntry = {
-        name: fileName,
-        cid: mockCid(),
-        size: fileSize,
-        date: new Date().toLocaleDateString(),
-        isFile: isFileUpload
-      };
-      setFiles([...files, newFile]);
+    } else if (selectedFile) {
+      try {
+        const cid = await uploadFileToIPFS(selectedFile);
+        const newFile: FileEntry = {
+          name: fileName,
+          cid,
+          size: fileSize,
+          date: new Date().toLocaleDateString(),
+          isFile: isFileUpload
+        };
+        setFiles([...files, newFile]);
+      } catch (err) {
+        alert('Upload failed.');
+        console.error(err);
+      }
     }
-
+  
     setDialogOpen(false);
     setIsRenameMode(false);
     setActiveFileIndex(null);
   };
+  
 
   const handleCopyCid = (cid: string) => {
     navigator.clipboard.writeText(cid);
