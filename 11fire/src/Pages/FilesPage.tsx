@@ -37,6 +37,9 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { uploadFileToIPFS } from '../api/upload';
+import { useEffect } from 'react';
+import { fetchFiles } from '../api/files';
+
 
 
 interface FileEntry {
@@ -77,6 +80,20 @@ const FilesPage = () => {
 
   // NEW STATE: Detect rename mode
   const [isRenameMode, setIsRenameMode] = useState(false);
+
+  useEffect(() => {
+    fetchFiles().then((data) => {
+      const formatted = data.map((f: any) => ({
+        name: f.name,
+        cid: f.cid,
+        size: formatSize(f.size),
+        date: new Date(f.date).toLocaleDateString(),
+        isFile: f.isFile,
+      }));
+      setFiles(formatted);
+    });
+  }, []);
+  
 
   const handleAddClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
