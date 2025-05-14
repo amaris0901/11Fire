@@ -30,7 +30,9 @@ const CreateSwarm = () => {
 Swarm ID: ${swarmId}
 Password: ${password}
 
+
 Make sure to copy and save both.`);
+      localStorage.setItem('swarmId', swarmId);
       navigate('/user-option');
     } catch (err) {
       setError('Swarm creation failed');

@@ -9,3 +9,18 @@ export const createSwarm = async (password: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const joinSwarm = async (swarmId: string, password: string) => {
+    const token = localStorage.getItem('token');
+    return axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/swarm/join`, { swarmId, password }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  };
+
+export const selectRole = async (swarmId: string, tag: 'user' | 'provider') => {
+    const token = localStorage.getItem('token');
+    return axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/swarm/role`, { swarmId, tag }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  };
+  
