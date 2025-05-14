@@ -1,11 +1,13 @@
 import axios from 'axios';
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
 
 export const uploadFileToIPFS = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
 
   try {
-    const response = await axios.post('http://localhost:3001/api/upload', formData, {
+    const response = await axios.post(`${API_BASE}/api/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

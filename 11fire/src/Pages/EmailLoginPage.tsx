@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import { TextField, Button, Typography, Paper } from '@mui/material';
+import { login } from '../api/auth';
 
 const EmailLoginPage = () => {
   const [email, setEmail] = useState('');
@@ -32,7 +32,7 @@ const EmailLoginPage = () => {
     if (hasError) return;
 
     try {
-      const res = await axios.post('http://localhost:3001/api/auth/login', { email, password });
+      const res = await login(email, password);
       localStorage.setItem('token', res.data.token);
       navigate('/swarm');
     } catch (err) {

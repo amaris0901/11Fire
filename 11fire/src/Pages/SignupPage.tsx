@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import { TextField, Button, Typography, Paper } from '@mui/material';
+import { signup } from '../api/auth';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -41,9 +41,9 @@ const SignupPage = () => {
     if (hasError) return;
 
     try {
-      const res = await axios.post('http://localhost:3001/api/auth/signup', { email, username, password });
+      const res = await signup(email, username, password);
       localStorage.setItem('token', res.data.token);
-      navigate('/swarm');
+      navigate('/user-option');
     } catch (err) {
       alert('Signup failed');
     }
