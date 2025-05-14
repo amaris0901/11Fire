@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LoginPage from '../Pages/LoginPage';
+// import LoginPage from '../Pages/LoginPage';
 import SwarmOption from '../Pages/SwarmOption';
 import JoinSwarm from '../Pages/JoinSwarm';
 import CreateSwarm from '../Pages/CreateSwarm';
@@ -21,4 +21,5 @@ const Router = () => (
     <Route path="/signup" element={<SignupPage />} />
   </Routes>
 );
+
 export default Router;
