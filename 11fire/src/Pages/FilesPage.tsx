@@ -39,6 +39,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { uploadFileToIPFS } from '../api/upload';
 import { useEffect } from 'react';
 import { fetchFiles } from '../api/files';
+import { downloadFile } from '../api/download';
 
 
 
@@ -93,7 +94,7 @@ const FilesPage = () => {
       setFiles(formatted);
     });
   }, []);
-  
+
 
   const handleAddClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -165,12 +166,12 @@ const FilesPage = () => {
         console.error(err);
       }
     }
-  
+
     setDialogOpen(false);
     setIsRenameMode(false);
     setActiveFileIndex(null);
   };
-  
+
 
   const handleCopyCid = (cid: string) => {
     navigator.clipboard.writeText(cid);
@@ -381,10 +382,11 @@ const FilesPage = () => {
           <MenuItem
             onClick={() => {
               if (activeFileIndex !== null) {
-                alert(`Download ${files[activeFileIndex].name}`);
+                const file = files[activeFileIndex];
+                downloadFile(file.cid, file.name);
               }
-              setFileMenuAnchor(null);
             }}
+
             sx={{ borderRadius: '12px', '&:hover': { bgcolor: '#f3ede1' } }}
           >
             <ListItemIcon>
