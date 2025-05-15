@@ -40,6 +40,7 @@ import { uploadFileToIPFS } from '../api/upload';
 import { useEffect } from 'react';
 import { fetchFiles } from '../api/files';
 import { downloadFile } from '../api/download';
+import { deleteFile } from '../api/delete';
 
 
 
@@ -397,12 +398,15 @@ const FilesPage = () => {
           <MenuItem
             onClick={() => {
               if (activeFileIndex !== null) {
-                const updatedFiles = [...files];
-                updatedFiles.splice(activeFileIndex, 1);
-                setFiles(updatedFiles);
+                const file = files[activeFileIndex];
+                deleteFile(file.cid).then(() => {
+                  const updated = [...files];
+                  updated.splice(activeFileIndex, 1);
+                  setFiles(updated);
+                }).catch((err) => alert("Failed to delete file"));
               }
-              setFileMenuAnchor(null);
             }}
+
             sx={{ borderRadius: '12px', '&:hover': { bgcolor: '#f3ede1' } }}
           >
             <ListItemIcon>
