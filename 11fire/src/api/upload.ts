@@ -6,24 +6,16 @@ export const uploadFileToIPFS = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  try {
-    const response = await axios.post(`${API_BASE}/api/upload`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      timeout: 15000, // Optional: wait up to 15s for backend to reply
-    });
+  const token = localStorage.getItem('token');
+  const swarmId = localStorage.getItem('swarmId');
 
-    return response.data.cid as string;
-  } catch (err: any) {
-    // Enhanced logging
-    if (err.response) {
-      console.error('Upload failed with response:', err.response.data);
-    } else if (err.request) {
-      console.error('Upload failed: No response received', err.request);
-    } else {
-      console.error('Upload setup failed:', err.message);
+  const response = await axios.post(`${API_BASE}/api/upload`, formData, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'x-swarm-id': swarmId || '',
+      'Content-Type': 'multipart/form-data'
     }
-    throw err;
-  }
+  });
+
+  return response.data.cid;
 };
