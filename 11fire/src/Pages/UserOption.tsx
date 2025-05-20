@@ -1,96 +1,127 @@
-import React from 'react';
-import { Box, Button, Typography, Avatar, useTheme } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { selectRole } from '../api/swarm';
+import React from "react";
+import { Box, Button, Typography, Avatar, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
+import { selectRole } from "../api/swarm";
 
 const UserOption = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
   const buttonStyle = {
-    bgcolor: theme.palette.primary.main,
-    color: 'white',
+    bgcolor: theme.palette.secondary.main,
+    color: "white",
     borderRadius: 2,
-    textTransform: 'none',
-    fontSize: '1rem',
+    textTransform: "none",
+    fontSize: "1rem",
     fontWeight: 500,
-    width: '200px',
-    height: '44px',
-    '&:hover': {
-      bgcolor: theme.palette.primary.dark,
+    width: "200px",
+    height: "44px",
+    "&:hover": {
+      opacity: 0.9,
     },
   };
 
   return (
     <Box
       sx={{
-        height: '100vh',
+        height: "100vh",
         bgcolor: theme.palette.primary.main,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        fontFamily: "Poppins, sans-serif",
       }}
     >
+      {/* Top Bar with Logo and Avatar */}
       <Box
         sx={{
-          width: 360,
-          height: 420,
-          bgcolor: theme.palette.background.default,
-          borderRadius: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          px: 4,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: 3,
+          py: 1.5,
+          borderBottom: `1px solid ${theme.palette.custom.border}`,
         }}
       >
-        <Avatar
+        <Box display="flex" alignItems="center">
+          <img
+            src={logo}
+            alt="11Fire Logo"
+            style={{ width: 31, height: 50, marginRight: 8 }}
+          />
+          <Typography variant="h5" fontWeight={800} color="text.primary">
+            11Fire
+          </Typography>
+        </Box>
+        <Avatar sx={{ bgcolor: theme.palette.secondary.main }}>N</Avatar>
+      </Box>
+
+      {/* Main Content */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
           sx={{
-            width: 64,
-            height: 64,
-            bgcolor: 'grey.400',
-            mb: 2,
-          }}
-        />
-        <Typography
-          variant="h5"
-          fontWeight={700}
-          sx={{ mb: 6, fontSize: '1.7rem', color: theme.palette.text.primary }}
-        >
-          11Fire
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{ ...buttonStyle, mb: 2 }}
-          onClick={async () => {
-            try {
-              const swarmId = localStorage.getItem('swarmId');
-              if (!swarmId) return alert('No Swarm ID found');
-              await selectRole(swarmId, 'user');
-              navigate('/files');
-            } catch (err) {
-              alert('Failed to select role');
-            }
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mt: -15,
           }}
         >
-          Use Storage
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ ...buttonStyle, mb: 2 }}
-          onClick={async () => {
-            try {
-              const swarmId = localStorage.getItem('swarmId');
-              if (!swarmId) return alert('No Swarm ID found');
-              await selectRole(swarmId, 'provider');
-              navigate('/provider-dashboard');
-            } catch (err) {
-              alert('Failed to select role');
-            }
-          }}
-        >
-          Provide Storage
-        </Button>
+          <Typography
+            variant="h5"
+            fontWeight={600}
+            sx={{
+              mb: 4,
+              color: theme.palette.text.primary,
+              textAlign: "center",
+            }}
+          >
+            Store or Contribute
+            <Box component="span" display="block">
+              Storage Space
+            </Box>
+          </Typography>
+
+          <Button
+            variant="contained"
+            sx={{ ...buttonStyle, mb: 2 }}
+            onClick={async () => {
+              try {
+                const swarmId = localStorage.getItem("swarmId");
+                if (!swarmId) return alert("No Swarm ID found");
+                await selectRole(swarmId, "user");
+                navigate("/files");
+              } catch (err) {
+                alert("Failed to select role");
+              }
+            }}
+          >
+            Use Storage
+          </Button>
+
+          <Button
+            variant="contained"
+            sx={buttonStyle}
+            onClick={async () => {
+              try {
+                const swarmId = localStorage.getItem("swarmId");
+                if (!swarmId) return alert("No Swarm ID found");
+                await selectRole(swarmId, "provider");
+                navigate("/provider-dashboard");
+              } catch (err) {
+                alert("Failed to select role");
+              }
+            }}
+          >
+            Provide Storage
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

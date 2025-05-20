@@ -1,7 +1,6 @@
 import { createTheme } from '@mui/material/styles';
-import { PaletteOptions } from '@mui/material/styles';
 
-// ✅ Module augmentation for custom palette
+
 declare module '@mui/material/styles' {
   interface Palette {
     custom: {
@@ -26,15 +25,14 @@ declare module '@mui/material/styles' {
   }
 }
 
-// ✅ Now create the theme using the extended PaletteOptions
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#EF4444',
-      dark: '#B91C1C',
+      main: '#FFFAF4',  
     },
     secondary: {
-      main: '#F97316',
+      main: '#EB6464',  
     },
     background: {
       default: '#FFF7ED',
@@ -54,7 +52,7 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Poppins, sans-serif',
+    fontFamily: 'Inter, sans-serif',  
   },
 });
 
