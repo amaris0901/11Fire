@@ -39,6 +39,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { uploadFileToIPFS } from '../api/upload';
 import { useEffect } from 'react';
 import { fetchFiles } from '../api/files';
+import { downloadFile } from '../api/download';
+import { deleteFile } from '../api/delete';
 
 
 
@@ -93,7 +95,7 @@ const FilesPage = () => {
       setFiles(formatted);
     });
   }, []);
-  
+
 
   const handleAddClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -165,12 +167,12 @@ const FilesPage = () => {
         console.error(err);
       }
     }
-  
+
     setDialogOpen(false);
     setIsRenameMode(false);
     setActiveFileIndex(null);
   };
-  
+
 
   const handleCopyCid = (cid: string) => {
     navigator.clipboard.writeText(cid);
@@ -381,10 +383,11 @@ const FilesPage = () => {
           <MenuItem
             onClick={() => {
               if (activeFileIndex !== null) {
-                alert(`Download ${files[activeFileIndex].name}`);
+                const file = files[activeFileIndex];
+                downloadFile(file.cid, file.name);
               }
-              setFileMenuAnchor(null);
             }}
+
             sx={{ borderRadius: '12px', '&:hover': { bgcolor: '#f3ede1' } }}
           >
             <ListItemIcon>
@@ -395,12 +398,15 @@ const FilesPage = () => {
           <MenuItem
             onClick={() => {
               if (activeFileIndex !== null) {
-                const updatedFiles = [...files];
-                updatedFiles.splice(activeFileIndex, 1);
-                setFiles(updatedFiles);
+                const file = files[activeFileIndex];
+                deleteFile(file.cid).then(() => {
+                  const updated = [...files];
+                  updated.splice(activeFileIndex, 1);
+                  setFiles(updated);
+                }).catch((err) => alert("Failed to delete file"));
               }
-              setFileMenuAnchor(null);
             }}
+
             sx={{ borderRadius: '12px', '&:hover': { bgcolor: '#f3ede1' } }}
           >
             <ListItemIcon>

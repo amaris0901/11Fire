@@ -1,4 +1,3 @@
-// src/Pages/JoinSwarm.tsx
 import React, { useState } from 'react';
 import {
   Box,
@@ -9,14 +8,35 @@ import {
   useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { createSwarm } from '../api/swarm';
 
 const CreateSwarm = () => {
   const theme = useTheme();
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [passcode, setPasscode] = useState('');
 
-  const handleCreate = () => {
-    navigate('/user-option');
+  const handleCreate = async () => {
+    setError('');
+    if (!password || password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+    try {
+      const res = await createSwarm(password);
+      const swarmId = res.data.swarmId;
+      alert(`Swarm created!
+
+Swarm ID: ${swarmId}
+Password: ${password}
+
+
+Make sure to copy and save both.`);
+      localStorage.setItem('swarmId', swarmId);
+      navigate('/user-option');
+    } catch (err) {
+      setError('Swarm creation failed');
+    }
   };
 
   return (
@@ -44,59 +64,34 @@ const CreateSwarm = () => {
           alignItems: 'center',
         }}
       >
-        {/* Top section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar
-            sx={{
-              width: 64,
-              height: 64,
-              bgcolor: 'grey.400',
-              mb: 1,
-            }}
-          />
-          <Typography
-            sx={{
-              fontSize: '1.7rem',
-              fontWeight: 700,
-              mb: 1,
-              color: theme.palette.text.primary,
-            }}
-          >
+          <Avatar sx={{ width: 64, height: 64, bgcolor: 'grey.400', mb: 1 }} />
+          <Typography sx={{ fontSize: '1.7rem', fontWeight: 700, mb: 1, color: theme.palette.text.primary }}>
             11Fire
           </Typography>
         </Box>
 
-        {/* Input section */}
         <Box sx={{ width: '100%' }}>
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: '1rem',
-              color: theme.palette.text.primary,
-              mb: 1,
-            }}
-          >
+          <Typography sx={{ fontWeight: 500, fontSize: '1rem', color: theme.palette.text.primary, mb: 1 }}>
             Create Group Passcode
           </Typography>
 
           <TextField
             fullWidth
             placeholder="Enter passcode"
-            value={passcode}
-            onChange={(e) => setPasscode(e.target.value)}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!error}
+            helperText={error}
             variant="outlined"
             sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-              },
-              input: {
-                py: 1.5,
-              },
+              '& .MuiOutlinedInput-root': { borderRadius: 2 },
+              input: { py: 1.5 },
             }}
           />
         </Box>
 
-        {/* Bottom section: Buttons aligned at bottom */}
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
           <Button
             onClick={handleCreate}
@@ -110,9 +105,7 @@ const CreateSwarm = () => {
               fontWeight: 500,
               height: 44,
               mb: 2,
-              '&:hover': {
-                bgcolor: theme.palette.primary.dark,
-              },
+              '&:hover': { bgcolor: theme.palette.primary.dark },
             }}
           >
             Create
@@ -131,9 +124,7 @@ const CreateSwarm = () => {
               fontWeight: 500,
               bgcolor: theme.palette.background.default,
               borderColor: theme.palette.custom.border,
-              '&:hover': {
-                bgcolor: '#f4ebe2',
-              },
+              '&:hover': { bgcolor: '#f4ebe2' },
             }}
           >
             Cancel
@@ -143,4 +134,5 @@ const CreateSwarm = () => {
     </Box>
   );
 };
+
 export default CreateSwarm;

@@ -1,7 +1,7 @@
-// src/Pages/SwarmOption.tsx
 import React from 'react';
 import { Box, Button, Typography, Avatar, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { selectRole } from '../api/swarm';
 
 const UserOption = () => {
   const theme = useTheme();
@@ -59,19 +59,35 @@ const UserOption = () => {
         >
           11Fire
         </Typography>
-
         <Button
           variant="contained"
           sx={{ ...buttonStyle, mb: 2 }}
-          onClick={() => navigate('/files')}
+          onClick={async () => {
+            try {
+              const swarmId = localStorage.getItem('swarmId');
+              if (!swarmId) return alert('No Swarm ID found');
+              await selectRole(swarmId, 'user');
+              navigate('/files');
+            } catch (err) {
+              alert('Failed to select role');
+            }
+          }}
         >
-          Store Data
+          Use Storage
         </Button>
-
         <Button
           variant="contained"
-          sx={buttonStyle}
-          onClick={() => navigate('/provide-storage')}
+          sx={{ ...buttonStyle, mb: 2 }}
+          onClick={async () => {
+            try {
+              const swarmId = localStorage.getItem('swarmId');
+              if (!swarmId) return alert('No Swarm ID found');
+              await selectRole(swarmId, 'provider');
+              navigate('/provider-dashboard');
+            } catch (err) {
+              alert('Failed to select role');
+            }
+          }}
         >
           Provide Storage
         </Button>

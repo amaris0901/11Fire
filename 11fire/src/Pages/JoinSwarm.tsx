@@ -1,4 +1,3 @@
-// src/Pages/JoinSwarm.tsx
 import React, { useState } from 'react';
 import {
   Box,
@@ -9,17 +8,31 @@ import {
   useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
+import { joinSwarm } from '../api/swarm';
 
 const JoinSwarm = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [passcode, setPasscode] = useState('');
+  const [swarmId, setSwarmId] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleJoin = () => {
-    navigate('/user-option');
+  const handleJoin = async () => {
+    setError('');
+    if (!swarmId || !password || password.length < 8) {
+      setError('Please enter valid swarm ID and a password (min 8 characters)');
+      return;
+    }
+    try {
+      await joinSwarm(swarmId, password);
+      alert(`Joined swarm successfully!
+Swarm ID: ${swarmId}`);
+      localStorage.setItem('swarmId', swarmId);
+      navigate('/user-option');
+    } catch (err) {
+      setError('Join failed. Please check swarm ID and password.');
+    }
   };
-  
 
   return (
     <Box
@@ -46,59 +59,42 @@ const JoinSwarm = () => {
           alignItems: 'center',
         }}
       >
-        {/* Top section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar
-            sx={{
-              width: 64,
-              height: 64,
-              bgcolor: 'grey.400',
-              mb: 1,
-            }}
-          />
-          <Typography
-            sx={{
-              fontSize: '1.7rem',
-              fontWeight: 700,
-              mb: 1,
-              color: theme.palette.text.primary,
-            }}
-          >
+          <Avatar sx={{ width: 64, height: 64, bgcolor: 'grey.400', mb: 1 }} />
+          <Typography sx={{ fontSize: '1.7rem', fontWeight: 700, mb: 1, color: theme.palette.text.primary }}>
             11Fire
           </Typography>
         </Box>
 
-        {/* Input section */}
         <Box sx={{ width: '100%' }}>
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: '1rem',
-              color: theme.palette.text.primary,
-              mb: 1,
-            }}
-          >
-            Group Passcode
+          <Typography sx={{ fontWeight: 500, fontSize: '1rem', color: theme.palette.text.primary, mb: 1 }}>
+            Swarm ID
           </Typography>
-
           <TextField
             fullWidth
-            placeholder="Enter passcode"
-            value={passcode}
-            onChange={(e) => setPasscode(e.target.value)}
+            placeholder="Enter swarm ID"
+            value={swarmId}
+            onChange={(e) => setSwarmId(e.target.value)}
             variant="outlined"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-              },
-              input: {
-                py: 1.5,
-              },
-            }}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 }, input: { py: 1.5 } }}
+          />
+
+          <Typography sx={{ fontWeight: 500, fontSize: '1rem', color: theme.palette.text.primary, mb: 1, mt: 3 }}>
+            Password
+          </Typography>
+          <TextField
+            fullWidth
+            placeholder="Enter password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!error}
+            helperText={error}
+            variant="outlined"
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 }, input: { py: 1.5 } }}
           />
         </Box>
 
-        {/* Bottom section: Buttons aligned at bottom */}
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
           <Button
             onClick={handleJoin}
@@ -112,9 +108,7 @@ const JoinSwarm = () => {
               fontWeight: 500,
               height: 44,
               mb: 2,
-              '&:hover': {
-                bgcolor: theme.palette.primary.dark,
-              },
+              '&:hover': { bgcolor: theme.palette.primary.dark },
             }}
           >
             Join
@@ -133,9 +127,7 @@ const JoinSwarm = () => {
               fontWeight: 500,
               bgcolor: theme.palette.background.default,
               borderColor: theme.palette.custom.border,
-              '&:hover': {
-                bgcolor: '#f4ebe2',
-              },
+              '&:hover': { bgcolor: '#f4ebe2' },
             }}
           >
             Cancel

@@ -1,11 +1,12 @@
 import axios from 'axios';
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
-export const fetchFiles = async () => {
+
+export const deleteFile = async (cid: string) => {
   const token = localStorage.getItem('token');
   const swarmId = localStorage.getItem('swarmId');
 
-  const response = await axios.get(`${API_BASE}/api/files`, {
+  const response = await axios.delete(`${API_BASE}/api/file/${cid}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'x-swarm-id': swarmId || ''
