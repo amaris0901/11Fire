@@ -43,7 +43,7 @@ const SignupPage = () => {
     try {
       const res = await signup(email, username, password);
       localStorage.setItem('token', res.data.token);
-      navigate('/swarm');
+      navigate('/user-option');
     } catch (err) {
       alert('Signup failed');
     }

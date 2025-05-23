@@ -33,7 +33,7 @@ Password: ${password}
 
 Make sure to copy and save both.`);
       localStorage.setItem('swarmId', swarmId);
-      navigate('/user-option');
+      navigate('/files');
     } catch (err) {
       setError('Swarm creation failed');
     }

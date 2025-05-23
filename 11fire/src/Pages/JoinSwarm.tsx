@@ -28,7 +28,7 @@ const JoinSwarm = () => {
       await joinSwarm(swarmId, password);
       alert(`Joined swarm successfully!\nSwarm ID: ${swarmId}`);
       localStorage.setItem("swarmId", swarmId);
-      navigate("/user-option");
+      navigate("/files");
     } catch (err) {
       setError("Join failed. Please check swarm ID and password.");
     }

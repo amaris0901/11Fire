@@ -17,9 +17,9 @@ export const joinSwarm = async (swarmId: string, password: string) => {
     });
   };
 
-export const selectRole = async (swarmId: string, tag: 'user' | 'provider') => {
+export const selectRole = async (role: 'user' | 'provider') => {
     const token = localStorage.getItem('token');
-    return axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/swarm/role`, { swarmId, tag }, {
+    return axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/swarm/role`, {role}, {
       headers: { Authorization: `Bearer ${token}` },
     });
   };

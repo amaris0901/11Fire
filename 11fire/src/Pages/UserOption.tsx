@@ -95,8 +95,8 @@ const UserOption = () => {
               try {
                 const swarmId = localStorage.getItem("swarmId");
                 if (!swarmId) return alert("No Swarm ID found");
-                await selectRole(swarmId, "user");
-                navigate("/files");
+                await selectRole("user");
+                navigate("/swarm");
               } catch (err) {
                 alert("Failed to select role");
               }
@@ -112,8 +112,8 @@ const UserOption = () => {
               try {
                 const swarmId = localStorage.getItem("swarmId");
                 if (!swarmId) return alert("No Swarm ID found");
-                await selectRole(swarmId, "provider");
-                navigate("/provider-dashboard");
+                await selectRole("provider");
+                navigate("/swarm");
               } catch (err) {
                 alert("Failed to select role");
               }
